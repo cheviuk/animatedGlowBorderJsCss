@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	
+:root {
+	--clr-1: #052b2f;
+	--clr-2: #073438;
+	--clr-3: #0e4b50;
+	--clr-4: #2d8f85;
+	--clr-5: #637c54;
+}
+
+@property --gradient-angle {
+	syntax: "<angle>";
+	initial-value: 0deg;
+	inherits: true;
+}
+
+body {
+	background: var(--clr-2);
+	min-height: 100vh;
+	display: grid;
+	place-content: center;
+}
+
+.pretty {
+	position: relative;
+	height: 60vh;
+	aspect-ratio: 1/1;
+	background: var(--clr-1);
+	border-radius: 0.5rem;
+}
+
+.pretty::after {
+	filter: blur(3.5rem);
+}
+
+.pretty::before,
+.pretty::after {
+	content: "";
+	position: absolute;
+	border-radius: inherit;
+	inset: -0.5rem;
+	z-index: -1;
+	background: conic-gradient(
+		from var(--gradient-angle),
+		var(--clr-3),
+		var(--clr-4),
+		var(--clr-5),
+		var(--clr-4),
+		var(--clr-3)
+	);
+	animation: rotation 1s linear infinite;
+}
+
+body:hover .pretty::before,
+body:hover .pretty::after {
+	animation: none;
+}
+
+body:hover {
+	background: black;
+}
+
+@keyframes rotation {
+	0% {
+		--gradient-angle: 0deg;
+	}
+	100% {
+		--gradient-angle: 360deg;
+	}
+}
+</style>
+
+<script type="text/javascript">
+function getAngle(event) {
+
+let angle = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--gradient-angle'));
+
+angle += event.movementX + event.movementY;
+
+if (angle > 360) {
+	angle -= 360;
+}
+
+if (angle < 0) {
+	angle += 360;
+}
+
+document.querySelector(':root').style.setProperty('--gradient-angle', angle + 'deg');;
+//console.log(angle);
+}
+</script>
+</head>
+<body onmousemove="getAngle(event)">
+<div class="pretty"></div>
+</body>
+</html>
